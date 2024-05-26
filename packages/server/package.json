@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:api": "serverless offline",
+    "start:api": "serverless offline -s dev",
     "lint": "ESLINT_USE_FLAT_CONFIG=false eslint --ext .ts --fix .",
     "prettier": "prettier --write --ignore-unknown .",
     "build": "tsc --noemit"

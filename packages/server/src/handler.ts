@@ -1,7 +1,7 @@
 import { Context, Handler } from 'aws-lambda';
 
-import { UsersController } from './controller/users';
-import { users } from './model';
+import { UsersController, MessagesController } from './controller';
+import { users, messages } from './model';
 
 const usersController = new UsersController(users);
 
@@ -12,3 +12,10 @@ export const register: Handler = (event: any, context: Context) => {
 export const login: Handler = (event: any, context: Context) => {
   return usersController.login(event, context);
 };
+
+
+const messagesController = new MessagesController(messages);
+
+export const sendMessage: Handler = (event: any, context: Context) => {
+  return messagesController.sendMessage(event, context);
+}

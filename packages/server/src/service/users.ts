@@ -1,13 +1,14 @@
 import { Model } from 'mongoose';
 
+import { UsersDocument } from '../model';
 import { CreateUserDTO } from '../model/dto/createUserDTO';
 import { LoginDTO } from '../model/dto/loginDTO';
 import { CustomError } from '../model/vo/responseVo';
 import { signToken } from '../utils/jwt';
 
 export class UsersService {
-  private users: Model<any>;
-  constructor(users: Model<any>) {
+  private users: Model<UsersDocument>;
+  constructor(users: Model<UsersDocument>) {
     this.users = users;
   }
 
@@ -17,13 +18,12 @@ export class UsersService {
    */
   protected async createUser(params: CreateUserDTO): Promise<object> {
     try {
-      const result = await this.users.create({
-        id: params.id,
+      const user = await this.users.create({
         email: params.email,
         password: params.password,
         name: params.name,
       });
-      return result;
+      return user;
     } catch (err) {
       console.error(err);
       throw err;
@@ -44,7 +44,7 @@ export class UsersService {
       }
 
       const { id, name } = user;
-      const token = signToken({ id: user.id, email: user.email });
+      const token = signToken({ id: user._id, email: user.email });
 
       return { id, name, email, token };
     } catch (err) {

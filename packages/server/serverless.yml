@@ -28,3 +28,10 @@ functions:
       - httpApi:
           path: /api/login
           method: POST
+  
+  sendMessage:
+    handler: src/handler.sendMessage
+    events:
+      - httpApi:
+          path: /api/send-message
+          method: POST

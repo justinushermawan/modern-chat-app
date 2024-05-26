@@ -2,7 +2,6 @@ import { Document, Schema, model, models } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 export type UsersDocument = Document & {
-  id: number,
   email: string,
   password: string,
   name: string,
@@ -12,7 +11,6 @@ export type UsersDocument = Document & {
 };
 
 const usersSchema = new Schema<UsersDocument>({
-  id: { type: Number, index: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   name: { type: String, required: true },

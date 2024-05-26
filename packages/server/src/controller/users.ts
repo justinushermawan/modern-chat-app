@@ -4,10 +4,11 @@ import { Model } from 'mongoose';
 import { UsersService } from '../service/users';
 import { CreateUserDTO } from '../model/dto/createUserDTO';
 import { LoginDTO } from '../model/dto/loginDTO';
+import { UsersDocument } from '../model';
 import { MessageUtil } from '../utils/message';
 
 export class UsersController extends UsersService {
-  constructor(users: Model<any>) {
+  constructor(users: Model<UsersDocument>) {
     super(users);
   }
 
@@ -20,12 +21,7 @@ export class UsersController extends UsersService {
     const params: CreateUserDTO = JSON.parse(event.body);
 
     try {
-      const result = await this.createUser({
-        id: params.id,
-        email: params.email,
-        password: params.password,
-        name: params.name,
-      });
+      const result = await this.createUser(params);
 
       return MessageUtil.success(result);
     } catch (err) {
