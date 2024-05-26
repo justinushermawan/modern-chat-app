@@ -1,0 +1,14 @@
+{
+  "name": "modern-chat-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Justinus Hermawan <justinushermawan@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev:client": "pnpm --filter client dev",
+    "dev:all": "concurrently \"pnpm dev:client\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

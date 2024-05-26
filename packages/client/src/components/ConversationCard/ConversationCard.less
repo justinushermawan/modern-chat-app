@@ -1,0 +1,38 @@
+.conversation-card {
+  height: 72px;
+  display: flex;
+  flex-direction: row;
+  transition: background-color 100ms ease-in;
+
+  &:hover {
+    background-color: #F4F4F4;
+    cursor: pointer;
+  }
+
+  &__image {
+    padding: 0 15px 0 13px;
+    display: flex;
+    align-items: center;
+
+    > div {
+      font-size: 1rem;
+      font-weight: 500;
+      width: 49px;
+      height: 49px;
+      background-color: #EEE;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+    }
+  }
+
+  &__name {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    font-size: 1rem;
+    padding-right: 15px;
+    border-top: 1px solid #EEE;
+  }
+}

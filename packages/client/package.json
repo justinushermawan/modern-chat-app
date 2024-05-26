@@ -1,0 +1,23 @@
+{
+  "name": "client",
+  "private": true,
+  "author": "Justinus Hermawan <justinushermawan@gmail.com>",
+  "scripts": {
+    "dev": "umi dev",
+    "build": "umi build",
+    "postinstall": "umi setup",
+    "setup": "umi setup",
+    "start": "npm run dev"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^4.4.0",
+    "antd": "^4.11.2",
+    "umi": "^4.2.5"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.3.0",
+    "@umijs/plugins": "^4.2.5",
+    "typescript": "^5.4.5"
+  }
+}

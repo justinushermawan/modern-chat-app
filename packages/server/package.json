@@ -1,0 +1,29 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:api": "serverless offline -s dev",
+    "lint": "ESLINT_USE_FLAT_CONFIG=false eslint --ext .ts --fix .",
+    "prettier": "prettier --write --ignore-unknown .",
+    "build": "tsc --noemit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.138",
+    "@types/node": "^20.12.12",
+    "esbuild": "^0.21.4",
+    "eslint": "^9.3.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "^3.2.5",
+    "serverless": "^3.34.0",
+    "serverless-esbuild": "^1.46.0",
+    "serverless-offline": "^12.0.4",
+    "typescript": "^5.4.5"
+  }
+}
