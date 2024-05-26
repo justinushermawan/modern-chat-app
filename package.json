@@ -6,8 +6,9 @@
   "license": "MIT",
   "scripts": {
     "dev:server": "pnpm --filter server dev",
+    "dev:ws": "pnpm --filter ws dev",
     "dev:client": "pnpm --filter client dev",
-    "dev:all": "concurrently \"pnpm dev:server\" \"pnpm dev:client\""
+    "dev:all": "concurrently \"pnpm dev:server\" \"pnpm dev:ws\" \"pnpm dev:client\""
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
