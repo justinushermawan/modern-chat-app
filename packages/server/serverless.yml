@@ -7,30 +7,15 @@ plugins:
 provider:
   name: aws
   runtime: nodejs18.x
-  region: ap-southeast-1
-  stage: ${opt:stage}
-  timeout: 30
   environment:
-    STAGE: ${self:provider.stage}
-
-custom:
-  customVariable1: Hello, World!
+    DB_URL: mongodb://localhost:27017
+    DB_NAME: modern-chat
+    DB_USERS_COLLECTION: users
 
 functions:
-  Function1:
-    handler: ./src/lambda1.handler
+  createUser:
+    handler: src/handler.createUser
     events:
       - httpApi:
-          path: /api/Function1
-          method: GET
-    environment:
-      CUSTOM_VAR: ${self:custom.customVariable1}
-  
-  Function2:
-    handler: ./src/lambda2.handler
-    timeout: 10
-    memorySize: 2048
-    events:
-      - schedule:
-          rate: cron(0 12 * * ? *)
-          enabled: true
+          path: /api/users
+          method: POST

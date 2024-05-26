@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:api": "serverless offline -s dev",
+    "start:api": "serverless offline",
     "lint": "ESLINT_USE_FLAT_CONFIG=false eslint --ext .ts --fix .",
     "prettier": "prettier --write --ignore-unknown .",
     "build": "tsc --noemit"
@@ -25,5 +25,8 @@
     "serverless-esbuild": "^1.46.0",
     "serverless-offline": "^12.0.4",
     "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "mongoose": "^8.4.0"
   }
 }

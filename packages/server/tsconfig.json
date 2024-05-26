@@ -5,8 +5,7 @@
     "moduleResolution": "Bundler",
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "target": "ES2022",
-    "strict": true
+    "target": "ES2022"
   },
   "include": ["src/**/*.ts"]
 }
