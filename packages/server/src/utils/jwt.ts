@@ -9,7 +9,7 @@ export const signToken = (payload: object, expiresIn = '1h') => {
 export const verifyToken = (token: string) => {
   try {
     return jwt.verify(token, secret);
-  } catch (error) {
+  } catch (err) {
     return null;
   }
 };

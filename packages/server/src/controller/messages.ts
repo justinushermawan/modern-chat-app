@@ -20,7 +20,7 @@ export class MessagesController extends MessagesService {
     const params: SendMessageDTO = JSON.parse(event.body);
 
     try {
-      const result = await this.send(params);
+      const result = await this.send({ ...params, user: event.user.id });
 
       return MessageUtil.success(result);
     } catch (err) {

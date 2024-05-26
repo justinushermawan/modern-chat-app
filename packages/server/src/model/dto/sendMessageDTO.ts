@@ -1,5 +1,5 @@
 export class SendMessageDTO {
-  user: string;
+  user?: string;
   content: string;
   parentId?: string;
 }
