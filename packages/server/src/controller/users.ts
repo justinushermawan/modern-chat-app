@@ -3,6 +3,7 @@ import { Model } from 'mongoose';
 
 import { UsersService } from '../service/users';
 import { CreateUserDTO } from '../model/dto/createUserDTO';
+import { LoginDTO } from '../model/dto/loginDTO';
 import { MessageUtil } from '../utils/message';
 
 export class UsersController extends UsersService {
@@ -11,10 +12,10 @@ export class UsersController extends UsersService {
   }
 
   /**
-   * Create new user
+   * Register new user
    * @param {*} event
    */
-  async create(event: any, context?: Context) {
+  async register(event: any, context?: Context) {
     console.log('functionName', context.functionName);
     const params: CreateUserDTO = JSON.parse(event.body);
 
@@ -24,6 +25,27 @@ export class UsersController extends UsersService {
         email: params.email,
         password: params.password,
         name: params.name,
+      });
+
+      return MessageUtil.success(result);
+    } catch (err) {
+      console.error(err);
+      return MessageUtil.error(err.code, err.message);
+    }
+  }
+
+  /**
+   * Login existing account
+   * @param {*} event
+   */
+  async login(event: any, context?: Context) {
+    console.log('functionName', context.functionName);
+    const params: LoginDTO = JSON.parse(event.body);
+
+    try {
+      const result = await this.verifyUser({
+        email: params.email,
+        password: params.password,
       });
 
       return MessageUtil.success(result);

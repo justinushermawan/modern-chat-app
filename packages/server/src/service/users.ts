@@ -1,5 +1,9 @@
 import { Model } from 'mongoose';
+
 import { CreateUserDTO } from '../model/dto/createUserDTO';
+import { LoginDTO } from '../model/dto/loginDTO';
+import { CustomError } from '../model/vo/responseVo';
+import { signToken } from '../utils/jwt';
 
 export class UsersService {
   private users: Model<any>;
@@ -20,6 +24,29 @@ export class UsersService {
         name: params.name,
       });
       return result;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  /**
+   * Verify user
+   * @param params
+   */
+  protected async verifyUser(params: LoginDTO): Promise<object> {
+    const { email, password } = params;
+  
+    try {
+      const user = await this.users.findOne({ email });
+      if (!user || !(await user.comparePassword(password))) {
+        throw new CustomError('Invalid email or password', 1001);
+      }
+
+      const { id, name } = user;
+      const token = signToken({ id: user.id, email: user.email });
+
+      return { id, name, email, token };
     } catch (err) {
       console.error(err);
       throw err;

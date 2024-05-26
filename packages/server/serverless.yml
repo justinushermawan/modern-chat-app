@@ -11,11 +11,19 @@ provider:
     DB_URL: mongodb://localhost:27017
     DB_NAME: modern-chat
     DB_USERS_COLLECTION: users
+    JWT_SECRET: modern-chat
 
 functions:
-  createUser:
-    handler: src/handler.createUser
+  register:
+    handler: src/handler.register
     events:
       - httpApi:
-          path: /api/users
+          path: /api/register
+          method: POST
+  
+  login:
+    handler: src/handler.login
+    events:
+      - httpApi:
+          path: /api/login
           method: POST
