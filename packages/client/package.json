@@ -13,7 +13,8 @@
   "dependencies": {
     "@ant-design/icons": "^4.4.0",
     "antd": "^4.11.2",
-    "umi": "^4.2.5"
+    "umi": "^4.2.5",
+    "umi-request": "^1.4.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",
