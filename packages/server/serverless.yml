@@ -11,6 +11,7 @@ provider:
     DB_URL: mongodb://localhost:27017
     DB_NAME: modern-chat
     DB_USERS_COLLECTION: users
+    DB_MESSAGES_COLLECTION: messages
     JWT_SECRET: modern-chat
 
 functions:
