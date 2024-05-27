@@ -23,7 +23,10 @@ export class UsersService {
         password: params.password,
         name: params.name,
       });
-      return user;
+
+      const userObj = user.toObject();
+      delete userObj.password;
+      return userObj;
     } catch (err) {
       console.error(err);
       throw err;

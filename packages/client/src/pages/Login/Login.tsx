@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link, history } from 'umi';
 import { Button, Form, Input } from 'antd';
+import { useRequest } from 'ahooks';
 
 import useSession from '@/hooks/useSession';
-import './Login.less';
-import { useRequest } from 'ahooks';
 import { apiPost, endpoints } from '@/utils/request';
+
+import './Login.less';
 
 export default function Login() {
   const { login } = useSession();

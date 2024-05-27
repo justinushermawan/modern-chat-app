@@ -1,32 +1,46 @@
-import React, { useState } from 'react';
-import { Link } from 'umi';
-import { Button, Input } from 'antd';
+import { useEffect, useState } from 'react';
+import { Link, history } from 'umi';
+import { Button, Form, Input } from 'antd';
+import { useRequest } from 'ahooks';
+
+import { apiPost, endpoints } from '@/utils/request';
 
 import './Register.less';
 
 export default function Login() {
-  const [payload, setPayload] = useState({
-    email: '',
-    password: '',
-  });
+  const {
+    data,
+    error,
+    loading,
+    run: submit,
+  } = useRequest(payload => apiPost(endpoints.register, {
+    data: payload,
+    getResponse: true,
+  }), { manual: true });
+  
+  const [hasError, setHasError] = useState(false);
+  const [errMessage, setErrMessage] = useState<string | null>(null);
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  useEffect(() => {
+    if (error) {
+      const { response, data: errData } = error as Record<string, any>;
+      const { status } = response;
+      setHasError(true);
 
-  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
+      if (status === 400) {
+        setErrMessage(errData.message);
+      } else {
+        setErrMessage(`Network error occured. Err#${status}`);
+      }
+    }
+  }, [error]);
 
-    setPayload((prevState) => ({
-      ...prevState,
-      [event.target.name]: event.target.value,
-    }));
-  };
-
-  const handleOnSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-
-    //
-  };
+  useEffect(() => {
+    const { data: userData } = data || {};
+    if (userData) {
+      history.push('/login');
+    }
+  }, [data]);
 
   return (
     <div className="register">
@@ -38,31 +52,51 @@ export default function Login() {
             login directly with existing account.
           </p>
         </div>
-        <form>
-          <Input
+        <Form onFinish={submit}
+          autoCapitalize="off"
+          autoComplete="off"
+        >
+          <Form.Item
             name="name"
-            type="text"
-            placeholder="Enter your full name"
-            onChange={handleOnChange}
-          />
-          <Input
+            rules={[
+              {
+                required: true,
+                message: 'Name is required',
+              }
+            ]}
+          >
+            <Input placeholder="Enter full name" />
+          </Form.Item>
+          <Form.Item
             name="email"
-            type="email"
-            placeholder="Enter your email"
-            onChange={handleOnChange}
-          />
-          <Input
+            rules={[
+              {
+                required: true,
+                message: 'Email is required',
+              }
+            ]}
+          >
+            <Input placeholder="Enter your email" />
+          </Form.Item>
+          <Form.Item
             name="password"
-            type="password"
-            placeholder="Enter a password"
-            onChange={handleOnChange}
-          />
-          {error && (
-            <span style={{ color: 'red', fontSize: '0.75rem' }}>{error}</span>
+            rules={[
+              {
+                required: true,
+                message: 'Password is required',
+              }
+            ]}
+          >
+            <Input.Password placeholder="Enter a password" />
+          </Form.Item>
+
+          {hasError && (
+            <span style={{ color: 'red', fontSize: '0.75rem' }}>{errMessage}</span>
           )}
+
           <Button
             block
-            onClick={handleOnSubmit}
+            htmlType="submit"
             className="register-btn"
             loading={loading}
           >
@@ -71,7 +105,7 @@ export default function Login() {
           <div className="login-link">
             Or, <Link to="/login">Login with existing account</Link>
           </div>
-        </form>
+        </Form>
       </div>
     </div>
   );

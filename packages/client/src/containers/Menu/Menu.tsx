@@ -1,20 +1,31 @@
 import { Button, Dropdown, Menu, Tabs } from 'antd';
 import { MoreOutlined } from '@ant-design/icons';
-import './Menu.less';
+
+import useSession from '@/hooks/useSession';
 import ConversationsTab from '../ConversationsTab/ConversationsTab';
 import ParticipantsTab from '../ParticipantsTab/ParticipantsTab';
+
+import './Menu.less';
+import { history } from 'umi';
 
 interface Props {
   handleSelectChat: (id: string) => void;
 }
 
 export default function MenuContent({ handleSelectChat }: Props) {
+  const { logout } = useSession();
+
+  const handleLogout = () => {
+    logout();
+    history.push('/login');
+  };
+
   const menu = (
     <Menu>
       <Menu.Item key="menu-1" onClick={() => {}}>
         Change profile image
       </Menu.Item>
-      <Menu.Item key="menu-2" onClick={() => {}}>
+      <Menu.Item key="menu-2" onClick={handleLogout}>
         Sign out
       </Menu.Item>
     </Menu>
