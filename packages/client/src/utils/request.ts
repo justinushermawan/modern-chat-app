@@ -1,13 +1,9 @@
-import { RequestOptionsInit, extend } from 'umi-request';
+import request, { RequestOptionsInit } from 'umi-request';
 import { SESSION_STORAGE_KEY } from '@/hooks/useSession';
 
 const url = 'http://localhost:3000/api';
 
-const request = extend({
-  prefix: `url`,
-});
-
-const endpoints = {
+export const endpoints = {
   login: `${url}/login`,
 };
 

@@ -1,7 +1,9 @@
 import { ResponseVO } from '../model/vo/responseVo';
 
-enum StatusCode {
+export enum StatusCode {
   success = 200,
+  unauthorized = 401,
+  serverError = 500,
 }
 
 class Result {
@@ -36,8 +38,8 @@ export class MessageUtil {
     return result.toString();
   }
 
-  static error(code: number = 1000, message: string) {
-    const result = new Result(StatusCode.success, code, message);
+  static error(message: string, code: number = 1000, statusCode: StatusCode = StatusCode.serverError) {
+    const result = new Result(statusCode, code, message);
 
     return result.toString();
   }

@@ -25,7 +25,7 @@ export class MessagesController extends MessagesService {
       return MessageUtil.success(result);
     } catch (err) {
       console.error(err);
-      return MessageUtil.error(err.code, err.message);
+      return MessageUtil.error(err.message, err.code);
     }
   }
 }

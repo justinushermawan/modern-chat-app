@@ -3,11 +3,9 @@ import { create } from 'zustand';
 export const SESSION_STORAGE_KEY = 'session-context';
 
 interface Session {
-  user: {
-    id: string;
-    email: string;
-    name: string;
-  };
+  id: string;
+  email: string;
+  name: string;
   token: string;
 }
 

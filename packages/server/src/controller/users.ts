@@ -5,7 +5,7 @@ import { UsersService } from '../service/users';
 import { CreateUserDTO } from '../model/dto/createUserDTO';
 import { LoginDTO } from '../model/dto/loginDTO';
 import { UsersDocument } from '../model';
-import { MessageUtil } from '../utils/message';
+import { MessageUtil, StatusCode } from '../utils/message';
 
 export class UsersController extends UsersService {
   constructor(users: Model<UsersDocument>) {
@@ -26,7 +26,7 @@ export class UsersController extends UsersService {
       return MessageUtil.success(result);
     } catch (err) {
       console.error(err);
-      return MessageUtil.error(err.code, err.message);
+      return MessageUtil.error(err.message, err.code);
     }
   }
 
@@ -47,7 +47,7 @@ export class UsersController extends UsersService {
       return MessageUtil.success(result);
     } catch (err) {
       console.error(err);
-      return MessageUtil.error(err.code, err.message);
+      return MessageUtil.error(err.message, err.code, StatusCode.unauthorized);
     }
   }
 }
