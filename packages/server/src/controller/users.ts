@@ -26,7 +26,7 @@ export class UsersController extends UsersService {
       return MessageUtil.success(result);
     } catch (err) {
       console.error(err);
-      return MessageUtil.error(err.message, err.code);
+      return MessageUtil.error(err.message, err.code, StatusCode.badRequest);
     }
   }
 

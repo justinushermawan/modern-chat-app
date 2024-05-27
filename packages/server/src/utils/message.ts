@@ -2,6 +2,7 @@ import { ResponseVO } from '../model/vo/responseVo';
 
 export enum StatusCode {
   success = 200,
+  badRequest = 400,
   unauthorized = 401,
   serverError = 500,
 }

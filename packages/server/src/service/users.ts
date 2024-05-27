@@ -18,6 +18,12 @@ export class UsersService {
    */
   protected async createUser(params: CreateUserDTO): Promise<object> {
     try {
+      // Check if a user with the provided email already exists
+      const existingUser = await this.users.findOne({ email: params.email });
+      if (existingUser) {
+        throw new CustomError('User with this email already exists', 1001);
+      }
+
       const user = await this.users.create({
         email: params.email,
         password: params.password,
@@ -43,7 +49,7 @@ export class UsersService {
     try {
       const user = await this.users.findOne({ email });
       if (!user || !(await user.comparePassword(password))) {
-        throw new CustomError('Invalid email or password', 1001);
+        throw new CustomError('Invalid email or password', 1002);
       }
 
       const { id, name } = user;
