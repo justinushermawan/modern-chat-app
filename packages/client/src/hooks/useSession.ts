@@ -7,11 +7,11 @@ interface Session {
   email: string;
   name: string;
   token: string;
+  createdOn?: number;
 }
 
 interface SessionState {
   session: Session | null;
-  createdOn?: number;
 
   login: (newSession: Omit<Session, 'createdOn'>) => void;
   logout: () => void;

@@ -41,7 +41,7 @@ export default function Login() {
   useEffect(() => {
     const { data: session } = data || {};
     if (session) {
-      login(session);
+      login(session.data);
 
       history.push('/');
     }

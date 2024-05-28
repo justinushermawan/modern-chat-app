@@ -1,3 +1,5 @@
+import type { OnlineUser } from '@/types';
+
 import { Button, Dropdown, Menu, Tabs } from 'antd';
 import { MoreOutlined } from '@ant-design/icons';
 
@@ -9,10 +11,11 @@ import './Menu.less';
 import { history } from 'umi';
 
 interface Props {
+  participants: OnlineUser[];
   handleSelectChat: (id: string) => void;
 }
 
-export default function MenuContent({ handleSelectChat }: Props) {
+export default function MenuContent({ participants, handleSelectChat }: Props) {
   const { logout } = useSession();
 
   const handleLogout = () => {
@@ -61,7 +64,7 @@ export default function MenuContent({ handleSelectChat }: Props) {
             <ConversationsTab handleSelectChat={handleSelectChat} />
           </Tabs.TabPane>
           <Tabs.TabPane tab="Participants" key="2">
-            <ParticipantsTab />
+            <ParticipantsTab participants={participants} />
           </Tabs.TabPane>
         </Tabs>
       </div>

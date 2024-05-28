@@ -1,23 +1,21 @@
+import type { OnlineUser } from '@/types';
+
 import ParticipantCard from '@/components/ParticipantCard/ParticipantCard';
+
 import './ParticipantsTab.less';
 
-export default function ParticipantsTab() {
+interface Props {
+  participants: OnlineUser[];
+}
+
+export default function ParticipantsTab({ participants }: Props) {
   return (
     <>
       <div className="participants-tab">
         <div className="participants-list">
-          <ParticipantCard />
-          <ParticipantCard />
-          <ParticipantCard />
-          <ParticipantCard />
-          <ParticipantCard />
-          <ParticipantCard />
-          <ParticipantCard />
-          <ParticipantCard />
-          <ParticipantCard />
-          <ParticipantCard />
-          <ParticipantCard />
-          <ParticipantCard />
+          {participants.map((participant, index) => (
+            <ParticipantCard key={index} participant={participant} />
+          ))}
         </div>
       </div>
     </>
