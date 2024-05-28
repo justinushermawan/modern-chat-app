@@ -2,13 +2,13 @@ import type { OnlineUser } from '@/types';
 
 import { useEffect, useState } from 'react';
 import { useWebSocket } from 'ahooks';
+import { ReadyState } from 'ahooks/lib/useWebSocket';
 
 import useSession from '@/hooks/useSession';
 import Menu from '@/containers/Menu/Menu';
 import ChatRoom from '@/containers/ChatRoom/ChatRoom';
 
 import './Chat.less';
-import { ReadyState } from 'ahooks/lib/useWebSocket';
 
 const url = 'ws://localhost:8080';
 
