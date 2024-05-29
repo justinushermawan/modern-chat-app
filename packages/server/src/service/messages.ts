@@ -1,4 +1,4 @@
-import mongoose, { Model } from 'mongoose';
+import { Model } from 'mongoose';
 
 import { UsersDocument, MessagesDocument } from '../model';
 import { SendMessageDTO } from '../model/dto/sendMessageDTO';
