@@ -44,6 +44,8 @@ wss.on('connection', (ws: WebSocket) => {
         name: messageData.name,
       };
       broadcastOnlineUsers();
+
+      ws.send(JSON.stringify({ type: 'chatHistory', data: messages }));
     } else if (data.type === 'chatMessage') {
       try {
         const { token, ...restMessageData } = messageData;

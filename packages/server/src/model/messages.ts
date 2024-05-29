@@ -1,7 +1,9 @@
 import { Document, Schema, model, models } from 'mongoose';
 
+import { UsersDocument } from './users';
+
 export type MessagesDocument = Document & {
-  user: string;
+  user: UsersDocument;
   content: string;
   parent: MessagesDocument | null;
   replies: MessagesDocument[];
@@ -9,7 +11,7 @@ export type MessagesDocument = Document & {
 };
 
 const messagesSchema = new Schema<MessagesDocument>({
-  user: { type: String, required: true },
+  user: { type: Schema.Types.ObjectId, ref: 'users' },
   content: { type: String, required: true },
   parent: { type: Schema.Types.ObjectId, ref: 'messages', default: null },
   replies: [{ type: Schema.Types.ObjectId, ref: 'messages' }],

@@ -21,6 +21,7 @@ export interface IncomingMessage {
 export interface Message {
   _id: string;
   user: string;
+  name: string;
   content: string;
   parent: string | null;
   replies: Message[];

@@ -1,12 +1,14 @@
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 
-import { MessagesDocument } from '../model/messages';
+import { UsersDocument, MessagesDocument } from '../model';
 import { SendMessageDTO } from '../model/dto/sendMessageDTO';
 import { CustomError } from '../model/vo/responseVo';
 
 export class MessagesService {
+  private users: Model<UsersDocument>;
   private messages: Model<MessagesDocument>;
-  constructor(messages: Model<MessagesDocument>) {
+  constructor(users: Model<UsersDocument>, messages: Model<MessagesDocument>) {
+    this.users = users;
     this.messages = messages;
   }
 
@@ -15,7 +17,33 @@ export class MessagesService {
    */
   protected async get(): Promise<object> {
     try {
-      const messages = await this.messages.find().sort({ createdAt: 1 }).exec();
+      const messages = await this.messages.aggregate([
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'user',
+            foreignField: '_id',
+            as: 'userDetails',
+          },
+        },
+        {
+          $unwind: '$userDetails',
+        },
+        {
+          $project: {
+            id: 1,
+            user: 1,
+            name: '$userDetails.name',
+            content: 1,
+            parent: 1,
+            replies: 1,
+            createdAt: 1,
+          },
+        },
+        {
+          $sort: { createdAt: -1 },
+        },
+      ]).exec();
       return messages;
     } catch (err) {
       console.error(err);
@@ -31,6 +59,8 @@ export class MessagesService {
     const { parentId, user, content } = params;
   
     try {
+      const userObj = await this.users.findById(user);
+
       let parentMessage = null;
       if (parentId) {
         parentMessage = await this.messages.findById(parentId);
@@ -40,7 +70,7 @@ export class MessagesService {
       }
 
       const message = await this.messages.create({
-        user,
+        user: userObj,
         content,
         parent: parentMessage,
       });

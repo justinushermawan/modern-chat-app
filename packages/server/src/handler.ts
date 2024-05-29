@@ -15,7 +15,7 @@ export const login: Handler = (event: any, context: Context) => {
 };
 
 
-const messagesController = new MessagesController(messages);
+const messagesController = new MessagesController(users, messages);
 
 export const getMessages: Handler = (event: any, context: Context) => {
   return messagesController.getMessages(event, context);

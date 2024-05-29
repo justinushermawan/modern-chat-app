@@ -2,13 +2,13 @@ import { Context } from 'aws-lambda';
 import { Model } from 'mongoose';
 
 import { MessagesService } from '../service/messages';
-import { MessagesDocument } from '../model';
+import { MessagesDocument, UsersDocument } from '../model';
 import { SendMessageDTO } from '../model/dto/sendMessageDTO';
 import { MessageUtil } from '../utils/message';
 
 export class MessagesController extends MessagesService {
-  constructor(messages: Model<MessagesDocument>) {
-    super(messages);
+  constructor(users: Model<UsersDocument>, messages: Model<MessagesDocument>) {
+    super(users, messages);
   }
 
   /**

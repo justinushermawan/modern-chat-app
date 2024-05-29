@@ -1,4 +1,4 @@
-import type { OnlineUser } from '@/types';
+import type { OnlineUser, Message } from '@/types';
 
 import { useEffect, useState } from 'react';
 import { useWebSocket } from 'ahooks';
@@ -13,7 +13,7 @@ import './Chat.less';
 const url = 'ws://localhost:8080';
 
 export interface MessageData {
-  type: 'onlineUsers' | '';
+  type: 'onlineUsers' | 'chatHistory';
   data: any;
 }
 
@@ -26,6 +26,7 @@ export default function Chat() {
   });
 
   const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [selectedChat, setSelectedChat] = useState<string | null>(null);
 
   useEffect(() => connect(), []);
@@ -50,6 +51,9 @@ export default function Chat() {
       if (data.type === 'onlineUsers') {
         const { data: messageData } = data;
         setOnlineUsers(messageData.users);
+      } else if (data.type === 'chatHistory') {
+        const { data: messages } = data;
+        setMessages(messages);
       }
     }
   }, [latestMessage]);
@@ -80,7 +84,7 @@ export default function Chat() {
         </div>
         <div className="app-container__content">
           {selectedChat ? (
-            <ChatRoom handleSendMessage={handleSendMessage} />
+            <ChatRoom messages={messages} handleSendMessage={handleSendMessage} />
           ) : (
             <div
               style={{

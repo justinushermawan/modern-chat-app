@@ -1,3 +1,5 @@
+import { Message } from '@/types';
+
 import React, { useState } from 'react';
 import { Button, Input } from 'antd';
 
@@ -6,10 +8,12 @@ import ChatMessage from '@/components/ChatMessage/ChatMessage';
 import './ChatRoom.less';
 
 interface Props {
+  messages: Message[];
+
   handleSendMessage: (message: string) => void;
 }
 
-export default function ChatRoom({ handleSendMessage }: Props) {
+export default function ChatRoom({ messages, handleSendMessage }: Props) {
   const [messageText, setMessageText] = useState('');
 
   const handleOnChangeMessage = (
@@ -36,18 +40,14 @@ export default function ChatRoom({ handleSendMessage }: Props) {
         </header>
         <main>
           <div>
-            <ChatMessage text="Hello, there!" createdAt="" />
-            <ChatMessage text="Hello, there!" createdAt="" />
-            <ChatMessage text="Hello, there!" createdAt="" />
-            <ChatMessage text="Hello, there!" createdAt="" />
-            <ChatMessage text="Hello, there!" createdAt="" />
-            <ChatMessage text="Hello, there!" createdAt="" />
-            <ChatMessage text="Hello, there!" createdAt="" />
-            <ChatMessage text="Hello, there!" createdAt="" />
-            <ChatMessage text="Hello, there!" createdAt="" />
-            <ChatMessage text="Hello, there!" createdAt="" />
-            <ChatMessage text="Hello, there!" createdAt="" />
-            <ChatMessage text="Hello, there!" createdAt="" />
+            {messages.map((message, index) => (
+              <ChatMessage
+                key={index}
+                text={message.content}
+                createdBy={message.name}
+                createdAt=""
+              />
+            ))}
           </div>
         </main>
         <footer>
