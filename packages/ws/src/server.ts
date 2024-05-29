@@ -1,4 +1,4 @@
-import type { ChatMessage, IncomingMessage, Message, OnlineUser } from './types';
+import type { IncomingMessage, Message, OnlineUser } from './types';
 
 import WebSocket, { WebSocketServer } from 'ws';
 import http from 'http';
@@ -53,7 +53,18 @@ wss.on('connection', (ws: WebSocket) => {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response.status === 200) {
-          broadcastMessage(messageData);
+          const { data } = response.data;
+          messages.push({
+            _id: data._id,
+            user: data.user._id,
+            name: data.user.name,
+            content: data.content,
+            parent: null,
+            replies: data.replies,
+            createdAt: data.createdAt,
+            __v: data.__v,
+          });
+          broadcastMessage();
         } else {
           console.error('Failed to send message to backend', response.data);
         }
@@ -89,8 +100,8 @@ const broadcastOnlineUsers = () => {
   });
 };
 
-const broadcastMessage = (message: ChatMessage) => {
-  const msg = JSON.stringify({ type: 'chatMessage', data: message });
+const broadcastMessage = () => {
+  const msg = JSON.stringify({ type: 'chatHistory', data: messages });
 
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
