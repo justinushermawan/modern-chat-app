@@ -17,6 +17,10 @@ export const login: Handler = (event: any, context: Context) => {
 
 const messagesController = new MessagesController(messages);
 
+export const getMessages: Handler = (event: any, context: Context) => {
+  return messagesController.getMessages(event, context);
+};
+
 export const sendMessage: Handler = verifyToken((event: any, context: Context) => {
   return messagesController.sendMessage(event, context);
 });

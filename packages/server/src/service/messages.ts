@@ -11,6 +11,19 @@ export class MessagesService {
   }
 
   /**
+   * Get messages
+   */
+  protected async get(): Promise<object> {
+    try {
+      const messages = await this.messages.find().sort({ createdAt: 1 }).exec();
+      return messages;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  /**
    * Send message
    * @params params
    */

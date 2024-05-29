@@ -12,6 +12,23 @@ export class MessagesController extends MessagesService {
   }
 
   /**
+   * Get messages
+   * @param {*} _event
+   */
+  async getMessages(_event: any, context?: Context) {
+    console.log('functionName', context.functionName);
+
+    try {
+      const messages = await this.get();
+
+      return MessageUtil.success(messages);
+    } catch (err) {
+      console.error(err);
+      return MessageUtil.error(err.message, err.code);
+    }
+  }
+
+  /**
    * Send message
    * @param {*} event
    */

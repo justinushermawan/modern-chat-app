@@ -1,4 +1,4 @@
-import type { ChatMessage, IncomingMessage, OnlineUser } from './types';
+import type { ChatMessage, IncomingMessage, Message, OnlineUser } from './types';
 
 import WebSocket, { WebSocketServer } from 'ws';
 import http from 'http';
@@ -14,6 +14,18 @@ const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
 const onlineUsers: Record<string, OnlineUser> = {};
+let messages: Message[] = [];
+
+const fetchMessages = async () => {
+  try {
+    const response = await api.get('/messages');
+    messages = response.data.data;
+    console.log('Initial messages loaded successfully!');
+  } catch (err) {
+    console.error('Failed to fetch messages from backend', err);
+  }
+};
+fetchMessages();
 
 wss.on('connection', (ws: WebSocket) => {
   console.log('Client connected');

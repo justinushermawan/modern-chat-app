@@ -17,3 +17,13 @@ export interface IncomingMessage {
   type: 'login' | 'chatMessage';
   data: any;
 }
+
+export interface Message {
+  _id: string;
+  user: string;
+  content: string;
+  parent: string | null;
+  replies: Message[];
+  createdAt: string;
+  __v: number;
+}

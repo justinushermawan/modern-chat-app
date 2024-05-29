@@ -29,6 +29,13 @@ functions:
           path: /api/login
           method: POST
   
+  getMessages:
+    handler: src/handler.getMessages
+    events:
+      - httpApi:
+          path: /api/messages
+          method: GET
+  
   sendMessage:
     handler: src/handler.sendMessage
     events:
