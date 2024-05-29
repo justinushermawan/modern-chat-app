@@ -45,7 +45,7 @@ export default function ChatRoom({ messages, handleSendMessage }: Props) {
                 key={index}
                 text={message.content}
                 createdBy={message.name}
-                createdAt=""
+                createdAt={message.createdAt}
               />
             ))}
           </div>

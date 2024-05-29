@@ -6,7 +6,7 @@ interface Props {
   createdAt: string;
 }
 
-export default function Message({ text, createdBy }: Props) {
+export default function Message({ text, createdBy, createdAt }: Props) {
   const messageType = 'received';
 
   return (
@@ -15,7 +15,7 @@ export default function Message({ text, createdBy }: Props) {
         <div className="message__content__sender">{createdBy}</div>
         <div className="message__content__text">{text}</div>
         <p className="message__content__at">
-          20:00
+          {new Date(createdAt).toLocaleString()}
         </p>
       </div>
     </div>

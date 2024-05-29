@@ -40,9 +40,6 @@ export class MessagesService {
             createdAt: 1,
           },
         },
-        {
-          $sort: { createdAt: -1 },
-        },
       ]).exec();
       return messages;
     } catch (err) {
