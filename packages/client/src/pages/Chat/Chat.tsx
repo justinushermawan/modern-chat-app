@@ -58,6 +58,20 @@ export default function Chat() {
     setSelectedChat(id);
   };
 
+  const handleSendMessage = (message: string) => {
+    if (!session) return;
+
+    if (message.trim()) {
+      const data = {
+        token: session.token,
+        user: session.id,
+        content: message,
+        parentId: null,
+      };
+      sendMessage(JSON.stringify({ type: 'chatMessage', data }));
+    }
+  };
+
   return (
     <div className="wrapper">
       <div className="app-container">
@@ -66,7 +80,7 @@ export default function Chat() {
         </div>
         <div className="app-container__content">
           {selectedChat ? (
-            <ChatRoom />
+            <ChatRoom handleSendMessage={handleSendMessage} />
           ) : (
             <div
               style={{

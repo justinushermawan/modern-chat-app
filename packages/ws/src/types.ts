@@ -7,7 +7,13 @@ export interface OnlineUser {
   name: string;
 }
 
+export interface ChatMessage {
+  user: string;
+  content: string;
+  parentId?: string;
+}
+
 export interface IncomingMessage {
-  type: 'login' | 'chat';
+  type: 'login' | 'chatMessage';
   data: any;
 }

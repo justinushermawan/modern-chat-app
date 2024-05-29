@@ -1,9 +1,11 @@
-import type { IncomingMessage, OnlineUser } from './types';
+import type { ChatMessage, IncomingMessage, OnlineUser } from './types';
 
 import WebSocket, { WebSocketServer } from 'ws';
 import http from 'http';
 import express from 'express';
 import bodyParser from 'body-parser';
+
+import api from './api';
 
 const app = express();
 app.use(bodyParser.json());
@@ -16,13 +18,13 @@ const onlineUsers: Record<string, OnlineUser> = {};
 wss.on('connection', (ws: WebSocket) => {
   console.log('Client connected');
 
-  ws.on('message', (message: string) => {
+  ws.on('message', async (message: string) => {
     console.log(`Received message: ${message}`);
 
     const data: IncomingMessage = JSON.parse(message);
+    const { data: messageData } = data;
 
     if (data.type === 'login') {
-      const { data: messageData } = data;
       onlineUsers[messageData.id] = {
         ws,
         id: messageData.id,
@@ -30,6 +32,20 @@ wss.on('connection', (ws: WebSocket) => {
         name: messageData.name,
       };
       broadcastOnlineUsers();
+    } else if (data.type === 'chatMessage') {
+      try {
+        const { token, ...restMessageData } = messageData;
+        const response = await api.post('/send-message', restMessageData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (response.status === 200) {
+          broadcastMessage(messageData);
+        } else {
+          console.error('Failed to send message to backend', response.data);
+        }
+      } catch (err) {
+        console.error('Failed to send message to backend', err);
+      }
     }
   });
 
@@ -55,6 +71,16 @@ const broadcastOnlineUsers = () => {
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
       client.send(message);
+    }
+  });
+};
+
+const broadcastMessage = (message: ChatMessage) => {
+  const msg = JSON.stringify({ type: 'chatMessage', data: message });
+
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(msg);
     }
   });
 };

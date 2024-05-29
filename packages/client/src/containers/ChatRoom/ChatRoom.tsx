@@ -5,7 +5,11 @@ import ChatMessage from '@/components/ChatMessage/ChatMessage';
 
 import './ChatRoom.less';
 
-export default function ChatRoom() {
+interface Props {
+  handleSendMessage: (message: string) => void;
+}
+
+export default function ChatRoom({ handleSendMessage }: Props) {
   const [messageText, setMessageText] = useState('');
 
   const handleOnChangeMessage = (
@@ -18,6 +22,9 @@ export default function ChatRoom() {
 
   const handleCreateMessage = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+
+    handleSendMessage(messageText);
+    setMessageText('');
   };
 
   return (

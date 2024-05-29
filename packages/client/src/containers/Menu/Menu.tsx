@@ -1,5 +1,6 @@
 import type { OnlineUser } from '@/types';
 
+import { history } from 'umi';
 import { Button, Dropdown, Menu, Tabs } from 'antd';
 import { MoreOutlined } from '@ant-design/icons';
 
@@ -8,7 +9,6 @@ import ConversationsTab from '../ConversationsTab/ConversationsTab';
 import ParticipantsTab from '../ParticipantsTab/ParticipantsTab';
 
 import './Menu.less';
-import { history } from 'umi';
 
 interface Props {
   participants: OnlineUser[];
@@ -16,7 +16,7 @@ interface Props {
 }
 
 export default function MenuContent({ participants, handleSelectChat }: Props) {
-  const { logout } = useSession();
+  const { session, logout } = useSession();
 
   const handleLogout = () => {
     logout();
@@ -26,7 +26,7 @@ export default function MenuContent({ participants, handleSelectChat }: Props) {
   const menu = (
     <Menu>
       <Menu.Item key="menu-1" onClick={() => {}}>
-        Change profile image
+        Change password
       </Menu.Item>
       <Menu.Item key="menu-2" onClick={handleLogout}>
         Sign out
@@ -47,10 +47,10 @@ export default function MenuContent({ participants, handleSelectChat }: Props) {
               backgroundColor: 'lightblue',
             }}
           >
-            J
+            {session?.name[0]}
           </Button>
           <span style={{ marginLeft: '12px', fontWeight: 500 }}>
-            Justinus Hermawan
+            {session?.name}
           </span>
         </div>
         <Dropdown.Button
