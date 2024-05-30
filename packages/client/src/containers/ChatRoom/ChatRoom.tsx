@@ -1,6 +1,6 @@
 import { Message } from '@/types';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Input } from 'antd';
 
 import ChatMessage from '@/components/ChatMessage/ChatMessage';
@@ -9,18 +9,21 @@ import './ChatRoom.less';
 
 interface Props {
   messages: Message[];
+  loading: boolean;
 
   handleSendMessage: (message: string) => void;
+  handleLoadMore: () => void;
 }
 
-export default function ChatRoom({ messages, handleSendMessage }: Props) {
+export default function ChatRoom({ messages, loading, handleSendMessage, handleLoadMore }: Props) {
   const [messageText, setMessageText] = useState('');
 
-  const scroller = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const scrollerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (scroller.current) {
-      scroller.current.scrollIntoView({ behavior: 'smooth' });
+    if (scrollerRef.current) {
+      scrollerRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
 
@@ -38,10 +41,23 @@ export default function ChatRoom({ messages, handleSendMessage }: Props) {
     handleSendMessage(messageText);
     setMessageText('');
 
-    if (scroller) {
-      scroller.current?.scrollIntoView({ behavior: 'smooth' });
+    if (scrollerRef) {
+      scrollerRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  const handleOnScroll = useCallback(() => {
+    const chatContainer = chatContainerRef.current;
+    if (chatContainer && chatContainer.scrollTop === 0 && !loading) {
+      handleLoadMore();
+    }
+  }, [loading, handleLoadMore]);
+
+  useEffect(() => {
+    const chatContainer = chatContainerRef.current;
+    chatContainer?.addEventListener('scroll', handleOnScroll);
+    return () => chatContainer?.removeEventListener('scroll', handleOnScroll);
+  }, [handleOnScroll]);
 
   return (
     <div className="chat-container">
@@ -51,7 +67,7 @@ export default function ChatRoom({ messages, handleSendMessage }: Props) {
           <span>Public</span>
         </header>
         <main>
-          <div>
+          <div ref={chatContainerRef}>
             {messages.map((message, index) => (
               <ChatMessage
                 key={index}
@@ -61,7 +77,7 @@ export default function ChatRoom({ messages, handleSendMessage }: Props) {
                 createdAt={message.createdAt}
               />
             ))}
-            <div ref={scroller} />
+            <div ref={scrollerRef} />
           </div>
         </main>
         <footer>

@@ -1,6 +1,6 @@
 import type { OnlineUser, Message } from '@/types';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useWebSocket } from 'ahooks';
 import { ReadyState } from 'ahooks/lib/useWebSocket';
 
@@ -28,6 +28,8 @@ export default function Chat() {
   const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [selectedChat, setSelectedChat] = useState<string | null>(null);
+  const [pageNumber, setPageNumber] = useState(2);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => connect(), []);
 
@@ -52,8 +54,9 @@ export default function Chat() {
         const { data: messageData } = data;
         setOnlineUsers(messageData.users);
       } else if (data.type === 'chatHistory') {
-        const { data: messages } = data;
-        setMessages(messages);
+        const { data: newMessages } = data;
+        setMessages(pageNumber > 1 ? [...newMessages, ...messages] : newMessages);
+        setLoading(false);
       } else if (data.type === 'newMessage') {
         const { data: message } = data;
         setMessages([...messages, message]);
@@ -79,6 +82,12 @@ export default function Chat() {
     }
   };
 
+  const handleLoadMore = useCallback(() => {
+    setLoading(true);
+    sendMessage(JSON.stringify({ type: 'chatHistory', data: { pageNumber } }));
+    setPageNumber(pageNumber + 1);
+  }, [pageNumber, sendMessage]);
+
   return (
     <div className="wrapper">
       <div className="app-container">
@@ -87,7 +96,12 @@ export default function Chat() {
         </div>
         <div className="app-container__content">
           {selectedChat ? (
-            <ChatRoom messages={messages} handleSendMessage={handleSendMessage} />
+            <ChatRoom
+              messages={messages}
+              loading={loading}
+              handleSendMessage={handleSendMessage}
+              handleLoadMore={handleLoadMore}
+            />
           ) : (
             <div
               style={{
