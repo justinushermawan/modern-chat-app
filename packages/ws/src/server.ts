@@ -1,4 +1,4 @@
-import type { IncomingMessage, Message, OnlineUser } from './types';
+import type { GetMessages, IncomingMessage, Message, OnlineUser } from './types';
 
 import WebSocket, { WebSocketServer } from 'ws';
 import http from 'http';
@@ -15,7 +15,7 @@ const wss = new WebSocketServer({ server });
 
 const onlineUsers: Record<string, OnlineUser> = {};
 
-const fetchMessages = async (pageNumber: number): Promise<Message[]> => {
+const fetchMessages = async (pageNumber: number): Promise<GetMessages> => {
   try {
     const response = await api.get('/messages', { params: { pageNumber } });
     return response.data.data;

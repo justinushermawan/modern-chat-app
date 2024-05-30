@@ -28,7 +28,8 @@ export default function Chat() {
   const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [selectedChat, setSelectedChat] = useState<string | null>(null);
-  const [pageNumber, setPageNumber] = useState(2);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [hasNext, setHasNext] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => connect(), []);
@@ -54,9 +55,13 @@ export default function Chat() {
         const { data: messageData } = data;
         setOnlineUsers(messageData.users);
       } else if (data.type === 'chatHistory') {
-        const { data: newMessages } = data;
-        setMessages(pageNumber > 1 ? [...newMessages, ...messages] : newMessages);
+        const { data: { messages: newMessages, pagination } } = data;
+        const { currentPage, hasNext } = pagination;
+
+        setMessages(currentPage > 1 ? [...newMessages, ...messages] : newMessages);
         setLoading(false);
+        setPageNumber(currentPage);
+        setHasNext(hasNext);
       } else if (data.type === 'newMessage') {
         const { data: message } = data;
         setMessages([...messages, message]);
@@ -83,10 +88,12 @@ export default function Chat() {
   };
 
   const handleLoadMore = useCallback(() => {
+    if (!hasNext) return;
+    if (loading) return;
+
     setLoading(true);
-    sendMessage(JSON.stringify({ type: 'chatHistory', data: { pageNumber } }));
-    setPageNumber(pageNumber + 1);
-  }, [pageNumber, sendMessage]);
+    sendMessage(JSON.stringify({ type: 'chatHistory', data: { pageNumber: pageNumber + 1 } }));
+  }, [hasNext, loading, pageNumber, sendMessage]);
 
   return (
     <div className="wrapper">

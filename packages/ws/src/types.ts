@@ -22,3 +22,13 @@ export interface Message {
   createdAt: string;
   __v: number;
 }
+
+export interface GetMessages {
+  messages: Message[];
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    hasNext: boolean;
+    nextPage: number | null;
+  };
+}

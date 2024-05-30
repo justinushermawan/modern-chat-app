@@ -13,12 +13,24 @@ export class MessagesService {
   }
 
   /**
+   * Get total messages
+   */
+  protected async getTotalMessages(): Promise<number> {
+    try {
+      const totalMessages = await this.messages.countDocuments();
+      return totalMessages;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  /**
    * Get messages
    */
-  protected async get(page: number): Promise<object> {
+  protected async get(page: number, pageSize: number): Promise<object> {
     try {
-      const limit = 25;
-      const skip = (page - 1) * limit;
+      const skip = (page - 1) * pageSize;
 
       const messages = await this.messages.aggregate([
         {
@@ -45,7 +57,7 @@ export class MessagesService {
         },
       ])
         .skip(skip)
-        .limit(limit)
+        .limit(pageSize)
         .exec();
       return messages;
     } catch (err) {

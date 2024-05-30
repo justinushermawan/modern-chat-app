@@ -13,7 +13,7 @@ export class MessagesController extends MessagesService {
 
   /**
    * Get messages
-   * @param {*} _event
+   * @param {*} event
    */
   async getMessages(event: any, context?: Context) {
     console.log('functionName', context.functionName);
@@ -22,9 +22,20 @@ export class MessagesController extends MessagesService {
       const { pageNumber } = event.queryStringParameters || { pageNumber: '1' };
       const page = parseInt(pageNumber, 10);
       
-      const messages = await this.get(page);
+      const pageSize = 25;
+      const messages = await this.get(page, pageSize);
 
-      return MessageUtil.success(messages);
+      const totalMessages = await this.getTotalMessages();
+      const totalPages = Math.ceil(totalMessages / pageSize);
+
+      const pagination = {
+        currentPage: page,
+        totalPages,
+        hasNext: pageNumber < totalPages,
+        nextPage: pageNumber < totalPages ? page + 1 : null,
+      };
+
+      return MessageUtil.success({ messages, pagination });
     } catch (err) {
       console.error(err);
       return MessageUtil.error(err.message, err.code);
