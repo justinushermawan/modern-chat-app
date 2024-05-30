@@ -1,6 +1,6 @@
 import { Message } from '@/types';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Input } from 'antd';
 
 import ChatMessage from '@/components/ChatMessage/ChatMessage';
@@ -16,6 +16,14 @@ interface Props {
 export default function ChatRoom({ messages, handleSendMessage }: Props) {
   const [messageText, setMessageText] = useState('');
 
+  const scroller = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scroller.current) {
+      scroller.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
+
   const handleOnChangeMessage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -29,6 +37,10 @@ export default function ChatRoom({ messages, handleSendMessage }: Props) {
 
     handleSendMessage(messageText);
     setMessageText('');
+
+    if (scroller) {
+      scroller.current?.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -48,6 +60,7 @@ export default function ChatRoom({ messages, handleSendMessage }: Props) {
                 createdAt={message.createdAt}
               />
             ))}
+            <div ref={scroller} />
           </div>
         </main>
         <footer>
