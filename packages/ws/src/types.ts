@@ -8,7 +8,7 @@ export interface OnlineUser {
 }
 
 export interface IncomingMessage {
-  type: 'login' | 'chatMessage';
+  type: 'login' | 'chatHistory' | 'chatMessage';
   data: any;
 }
 

@@ -15,11 +15,14 @@ export class MessagesController extends MessagesService {
    * Get messages
    * @param {*} _event
    */
-  async getMessages(_event: any, context?: Context) {
+  async getMessages(event: any, context?: Context) {
     console.log('functionName', context.functionName);
 
     try {
-      const messages = await this.get();
+      const { pageNumber } = event.queryStringParameters || { pageNumber: '1' };
+      const page = parseInt(pageNumber, 10);
+      
+      const messages = await this.get(page);
 
       return MessageUtil.success(messages);
     } catch (err) {

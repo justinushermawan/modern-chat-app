@@ -14,18 +14,16 @@ const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
 const onlineUsers: Record<string, OnlineUser> = {};
-let messages: Message[] = [];
 
-const fetchMessages = async () => {
+const fetchMessages = async (pageNumber: number): Promise<Message[]> => {
   try {
-    const response = await api.get('/messages');
-    messages = response.data.data;
-    console.log('Initial messages loaded successfully!');
-  } catch (err) {
-    console.error('Failed to fetch messages from backend', err);
+    const response = await api.get('/messages', { params: { pageNumber } });
+    return response.data.data;
+  } catch (error) {
+    console.error('Failed to fetch messages:', error);
+    throw new Error('Failed to fetch messages');
   }
 };
-fetchMessages();
 
 wss.on('connection', (ws: WebSocket) => {
   console.log('Client connected');
@@ -45,7 +43,15 @@ wss.on('connection', (ws: WebSocket) => {
       };
       broadcastOnlineUsers();
 
+      const messages = await fetchMessages(1);
       ws.send(JSON.stringify({ type: 'chatHistory', data: messages }));
+    } else if (data.type === 'chatHistory') {
+      try {
+        const messages = await fetchMessages(data.data.pageNumber);
+        ws.send(JSON.stringify({ type: 'chatHistory', data: messages }));
+      } catch (err) {
+        console.error('Failed to fetch messages from backend', err);
+      }
     } else if (data.type === 'chatMessage') {
       try {
         const { token, ...restMessageData } = messageData;
@@ -53,18 +59,17 @@ wss.on('connection', (ws: WebSocket) => {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response.status === 200) {
-          const { data } = response.data;
-          messages.push({
-            _id: data._id,
-            user: data.user._id,
-            name: data.user.name,
-            content: data.content,
+          const { _id, user, content, replies, createdAt, __v } = response.data.data;
+          broadcastNewMessage({
+            _id,
+            user: user._id,
+            name: user.name,
+            content,
             parent: null,
-            replies: data.replies,
-            createdAt: data.createdAt,
-            __v: data.__v,
+            replies,
+            createdAt,
+            __v,
           });
-          broadcastMessage();
         } else {
           console.error('Failed to send message to backend', response.data);
         }
@@ -100,8 +105,8 @@ const broadcastOnlineUsers = () => {
   });
 };
 
-const broadcastMessage = () => {
-  const msg = JSON.stringify({ type: 'chatHistory', data: messages });
+const broadcastNewMessage = (message: Message) => {
+  const msg = JSON.stringify({ type: 'newMessage', data: message });
 
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {

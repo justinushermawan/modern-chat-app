@@ -15,8 +15,11 @@ export class MessagesService {
   /**
    * Get messages
    */
-  protected async get(): Promise<object> {
+  protected async get(page: number): Promise<object> {
     try {
+      const limit = 25;
+      const skip = (page - 1) * limit;
+
       const messages = await this.messages.aggregate([
         {
           $lookup: {
@@ -40,7 +43,10 @@ export class MessagesService {
             createdAt: 1,
           },
         },
-      ]).exec();
+      ])
+        .skip(skip)
+        .limit(limit)
+        .exec();
       return messages;
     } catch (err) {
       console.error(err);

@@ -54,6 +54,9 @@ export default function Chat() {
       } else if (data.type === 'chatHistory') {
         const { data: messages } = data;
         setMessages(messages);
+      } else if (data.type === 'newMessage') {
+        const { data: message } = data;
+        setMessages([...messages, message]);
       }
     }
   }, [latestMessage]);
