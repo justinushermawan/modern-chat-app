@@ -56,7 +56,8 @@ export default function ChatRoom({ messages, handleSendMessage }: Props) {
               <ChatMessage
                 key={index}
                 text={message.content}
-                createdBy={message.name}
+                createdById={message.user}
+                createdByName={message.name}
                 createdAt={message.createdAt}
               />
             ))}
