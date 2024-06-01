@@ -68,14 +68,8 @@ export default function ChatRoom({ messages, loading, handleSendMessage, handleL
         </header>
         <main>
           <div ref={chatContainerRef}>
-            {messages.map((message, index) => (
-              <ChatMessage
-                key={index}
-                text={message.content}
-                createdById={message.user._id}
-                createdByName={message.user.name}
-                createdAt={message.createdAt}
-              />
+            {messages.map((message) => (
+              <ChatMessage key={message._id} data={message} />
             ))}
             <div ref={scrollerRef} />
           </div>
