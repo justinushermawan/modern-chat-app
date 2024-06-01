@@ -31,31 +31,21 @@ export class MessagesService {
   protected async get(page: number, pageSize: number): Promise<object> {
     try {
       const skip = (page - 1) * pageSize;
-
-      const messages = await this.messages.aggregate([
-        {
-          $lookup: {
-            from: 'users',
-            localField: 'user',
-            foreignField: '_id',
-            as: 'userDetails',
-          },
-        },
-        {
-          $unwind: '$userDetails',
-        },
-        {
-          $project: {
-            id: 1,
-            user: 1,
-            name: '$userDetails.name',
-            content: 1,
-            parent: 1,
-            replies: 1,
-            createdAt: 1,
-          },
-        },
-      ])
+      const messages = await this.messages.find({ parent: null })
+        .populate({
+          path: 'user',
+          select: 'name',
+        })
+        .populate({
+          path: 'replies',
+          populate: [
+            { path: 'user', select: 'name' },
+            {
+              path: 'replies',
+              populate: { path: 'user', select: 'name' },
+            },
+          ],
+        })
         .skip(skip)
         .limit(pageSize)
         .exec();

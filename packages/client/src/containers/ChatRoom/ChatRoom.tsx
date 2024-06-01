@@ -72,8 +72,8 @@ export default function ChatRoom({ messages, loading, handleSendMessage, handleL
               <ChatMessage
                 key={index}
                 text={message.content}
-                createdById={message.user}
-                createdByName={message.name}
+                createdById={message.user._id}
+                createdByName={message.user.name}
                 createdAt={message.createdAt}
               />
             ))}

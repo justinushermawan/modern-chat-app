@@ -62,8 +62,10 @@ wss.on('connection', (ws: WebSocket) => {
           const { _id, user, content, replies, createdAt, __v } = response.data.data;
           broadcastNewMessage({
             _id,
-            user: user._id,
-            name: user.name,
+            user: {
+              _id: user._id,
+              name: user.name,
+            },
             content,
             parent: null,
             replies,

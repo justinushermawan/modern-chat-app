@@ -6,8 +6,10 @@ export interface OnlineUser {
 
 export interface Message {
   _id: string;
-  user: string;
-  name: string;
+  user: {
+    _id: string;
+    name: string;
+  };
   content: string;
   parent: string | null;
   replies: Message[];

@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 const secret = process.env.JWT_SECRET || 'modern-chat';
 
-export const signToken = (payload: object, expiresIn = '1h') => {
+export const signToken = (payload: object, expiresIn = '2 days') => {
   return jwt.sign(payload, secret, { expiresIn });
 };
 
