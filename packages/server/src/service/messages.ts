@@ -17,7 +17,7 @@ export class MessagesService {
    */
   protected async getTotalMessages(): Promise<number> {
     try {
-      const totalMessages = await this.messages.countDocuments();
+      const totalMessages = await this.messages.countDocuments({ parent: null });
       return totalMessages;
     } catch (err) {
       console.error(err);
@@ -30,7 +30,6 @@ export class MessagesService {
    */
   protected async get(page: number, pageSize: number): Promise<object> {
     try {
-      const skip = (page - 1) * pageSize;
       const messages = await this.messages.find({ parent: null })
         .populate({
           path: 'user',
@@ -46,7 +45,8 @@ export class MessagesService {
             },
           ],
         })
-        .skip(skip)
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * pageSize)
         .limit(pageSize)
         .exec();
       return messages;

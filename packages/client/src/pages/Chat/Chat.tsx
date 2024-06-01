@@ -58,7 +58,7 @@ export default function Chat() {
         const { data: { messages: newMessages, pagination } } = data;
         const { currentPage, hasNext } = pagination;
 
-        setMessages(currentPage > 1 ? [...newMessages, ...messages] : newMessages);
+        setMessages(currentPage > 1 ? [...newMessages.reverse(), ...messages] : newMessages.reverse());
         setLoading(false);
         setPageNumber(currentPage);
         setHasNext(hasNext);
