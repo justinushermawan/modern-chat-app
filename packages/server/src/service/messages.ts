@@ -87,7 +87,7 @@ export class MessagesService {
 
       const messageObj = message.toObject();
       delete messageObj.parent;
-      return messageObj;
+      return { ...messageObj, parent: parentId };
     } catch (err) {
       console.error(err);
       throw err;

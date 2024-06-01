@@ -65,9 +65,32 @@ export default function Chat() {
       } else if (data.type === 'newMessage') {
         const { data: message } = data;
         setMessages([...messages, message]);
+      } else if (data.type === 'newReply') {
+        const { data: reply } = data;
+        setMessages((prevMessages) => appendReply(prevMessages, reply));
       }
     }
   }, [latestMessage]);
+
+  const appendReply = (messages: Message[], reply: Message) => {
+    const findAndAppend = (messages: Message[]): Message[] => {
+      return messages.map((message) => {
+        if (message._id === reply.parent) {
+          return {
+            ...message,
+            replies: [...message.replies, reply],
+          };
+        } else if (message.replies) {
+          return {
+            ...message,
+            replies: findAndAppend(message.replies),
+          };
+        }
+        return message;
+      });
+    };
+    return findAndAppend(messages);
+  };
 
   const handleSelectChat = (id: string) => {
     setSelectedChat(id);

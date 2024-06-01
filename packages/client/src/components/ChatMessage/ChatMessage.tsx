@@ -43,7 +43,7 @@ export default function Message({ data, handleReplyClick }: Props) {
               <Message
                 key={reply._id}
                 data={reply}
-                handleReplyClick={(event) => handleReplyClick(event, reply)}
+                handleReplyClick={handleReplyClick}
               />
             ))}
           </div>
