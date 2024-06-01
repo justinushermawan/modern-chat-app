@@ -55,7 +55,13 @@ export default function MenuContent({ participants, handleSelectChat }: Props) {
         </div>
         <Dropdown.Button
           overlay={menu}
-          icon={<MoreOutlined style={{ fontSize: '1.65rem' }} />}
+          icon={(
+            <MoreOutlined
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
+              style={{ fontSize: '1.65rem' }}
+            />
+          )}
         />
       </header>
       <div className="tabs-container">

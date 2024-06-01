@@ -71,7 +71,7 @@ wss.on('connection', (ws: WebSocket) => {
             replies,
             createdAt,
             __v,
-          });
+          }, restMessageData.parentId !== null);
         } else {
           console.error('Failed to send message to backend', response.data);
         }
@@ -107,8 +107,8 @@ const broadcastOnlineUsers = () => {
   });
 };
 
-const broadcastNewMessage = (message: Message) => {
-  const msg = JSON.stringify({ type: 'newMessage', data: message });
+const broadcastNewMessage = (message: Message, isReply: boolean = false) => {
+  const msg = JSON.stringify({ type: !isReply ? 'newMessage' : 'newReply', data: message });
 
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {

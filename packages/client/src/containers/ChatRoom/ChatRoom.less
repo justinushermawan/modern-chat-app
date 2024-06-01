@@ -77,11 +77,34 @@
       order: 3;
       width: 100%;
 
-      > .chat-reply-quote {
-        height: 60px;
+      .chat-reply-quote {
+        display: flex;
+        align-items: center;
+        column-gap: 8px;
+        padding: 12px 16px;
+
+        &__bubble {
+          flex: 1;
+          padding: 4px 8px;
+          line-height: 24px;
+          color: #252525;
+          background-color: #EEEEEE;
+          border-radius: 6px;
+          word-wrap: break-word;
+          box-shadow: 0 1px 1px rgba(0,0,0,0.12);
+
+          &__sender {
+            font-size: 0.75rem;
+            font-weight: 500;
+          }
+
+          &__text {
+            text-align: left;
+          }
+        }
       }
 
-      > .chat-input {
+      .chat-input {
         min-height: 62px;
         border-top: 1px solid #CCC;
         padding: 16px;

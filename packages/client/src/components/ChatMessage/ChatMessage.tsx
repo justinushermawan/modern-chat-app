@@ -1,5 +1,6 @@
 import type { Message } from '@/types';
 
+import React from 'react';
 import { Button, Tooltip } from 'antd';
 import { RollbackOutlined } from '@ant-design/icons';
 
@@ -9,9 +10,11 @@ import './ChatMessage.less';
 
 interface Props {
   data: Message;
+
+  handleReplyClick: (event: React.MouseEvent<HTMLElement>, message: Message) => void;
 }
 
-export default function Message({ data }: Props) {
+export default function Message({ data, handleReplyClick }: Props) {
   const { user, content, replies, parent, createdAt } = data;
 
   const { session } = useSession();
@@ -24,7 +27,7 @@ export default function Message({ data }: Props) {
   return (
     <div className={`message ${messageType}`}>
       <div>
-        <div className="message__content" style={isReply ? { backgroundColor: 'rgb(217, 239, 204)' } : undefined}>
+        <div className={`message__content ${isReply ? 'reply' : undefined}`}>
           <div className="message__content__sender">{isMe && isReply ? 'You' : user.name}</div>
           <div className="message__content__text">{content}</div>
           <p className="message__content__at">
@@ -34,14 +37,14 @@ export default function Message({ data }: Props) {
         {replies.length > 0 && (
           <div
             className="message__replies"
-            style={
-              messageType === 'sent'
-                ? { paddingRight: '12px' }
-                : { paddingLeft: '12px' }
-            }
+            style={{ paddingLeft: '12px' }}
           >
             {replies.map((reply) => (
-              <Message key={reply._id} data={reply} />
+              <Message
+                key={reply._id}
+                data={reply}
+                handleReplyClick={(event) => handleReplyClick(event, reply)}
+              />
             ))}
           </div>
         )}
@@ -49,8 +52,9 @@ export default function Message({ data }: Props) {
       <Tooltip title="Reply">
         <Button
           shape="circle"
-          icon={<RollbackOutlined />}
+          icon={<RollbackOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
           style={{ margin: '0 8px' }}
+          onClick={(event) => handleReplyClick(event, data)}
         />
       </Tooltip>
     </div>

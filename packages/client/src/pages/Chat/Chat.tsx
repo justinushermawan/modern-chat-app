@@ -73,7 +73,7 @@ export default function Chat() {
     setSelectedChat(id);
   };
 
-  const handleSendMessage = (message: string) => {
+  const handleSendMessage = (message: string, parentId: string | null = null) => {
     if (!session) return;
 
     if (message.trim()) {
@@ -81,7 +81,7 @@ export default function Chat() {
         token: session.token,
         user: session.id,
         content: message,
-        parentId: null,
+        parentId,
       };
       sendMessage(JSON.stringify({ type: 'chatMessage', data }));
     }
