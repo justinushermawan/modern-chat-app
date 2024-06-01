@@ -1,5 +1,8 @@
 import type { Message } from '@/types';
 
+import { Button, Tooltip } from 'antd';
+import { RollbackOutlined } from '@ant-design/icons';
+
 import useSession from '@/hooks/useSession';
 
 import './ChatMessage.less';
@@ -43,6 +46,13 @@ export default function Message({ data }: Props) {
           </div>
         )}
       </div>
+      <Tooltip title="Reply">
+        <Button
+          shape="circle"
+          icon={<RollbackOutlined />}
+          style={{ margin: '0 8px' }}
+        />
+      </Tooltip>
     </div>
   );
 }
