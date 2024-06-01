@@ -37,18 +37,39 @@ export class MessagesService {
         })
         .populate({
           path: 'replies',
-          populate: [
-            { path: 'user', select: 'name' },
-            {
-              path: 'replies',
-              populate: { path: 'user', select: 'name' },
-            },
-          ],
+          populate: {
+            path: 'user',
+            select: 'name',
+          },
         })
         .sort({ createdAt: -1 })
         .skip((page - 1) * pageSize)
         .limit(pageSize)
         .exec();
+
+      const populateRepliesRecursively = async (message: MessagesDocument) => {
+        await message.populate({
+          path: 'replies',
+          populate: [
+            {
+              path: 'user',
+              select: 'name',
+            },
+            {
+              path: 'replies',
+              populate: {
+                path: 'user',
+                select: 'name',
+              },
+            },
+          ],
+        });
+
+        await Promise.all(message.replies.map(populateRepliesRecursively));
+      };
+
+      await Promise.all(messages.map(populateRepliesRecursively));
+
       return messages;
     } catch (err) {
       console.error(err);
