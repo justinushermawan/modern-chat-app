@@ -17,6 +17,7 @@ interface Props {
 
 export default function ChatRoom({ messages, loading, handleSendMessage, handleLoadMore }: Props) {
   const [messageText, setMessageText] = useState('');
+  const [isReplying, setIsReplying] = useState(false);
 
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -35,9 +36,23 @@ export default function ChatRoom({ messages, loading, handleSendMessage, handleL
     setMessageText(event.target.value);
   };
 
+  const handleOnKeyDownMessage = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+
+      _handleSendMessage();
+    }
+  };
+
   const handleCreateMessage = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
+    _handleSendMessage();
+  };
+
+  const _handleSendMessage = () => {
     handleSendMessage(messageText);
     setMessageText('');
 
@@ -75,15 +90,21 @@ export default function ChatRoom({ messages, loading, handleSendMessage, handleL
           </div>
         </main>
         <footer>
-          <form onSubmit={(e) => e.preventDefault()}>
-            <Input
-              type="text"
-              value={messageText}
-              placeholder="Type a message"
-              onChange={handleOnChangeMessage}
-            />
-            <Button onClick={handleCreateMessage}>Send message</Button>
-          </form>
+          {isReplying && (
+            <div className="chat-reply-quote"></div>
+          )}
+          <div className="chat-input">
+            <form onSubmit={(e) => e.preventDefault()}>
+              <Input
+                type="text"
+                value={messageText}
+                placeholder="Type a message"
+                onChange={handleOnChangeMessage}
+                onKeyDown={handleOnKeyDownMessage}
+              />
+              <Button onClick={handleCreateMessage}>Send message</Button>
+            </form>
+          </div>
         </footer>
       </div>
     </div>

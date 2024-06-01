@@ -76,17 +76,19 @@
       flex: none;
       order: 3;
       width: 100%;
-      min-height: 62px;
-      border-top: 1px solid #CCC;
-      padding: 0 16px;
 
-      > form {
-        display: flex;
-        position: absolute;
-        top: 50%;
-        right: 16px;
-        left: 16px;
-        transform: translateY(-50%);
+      > .chat-reply-quote {
+        height: 60px;
+      }
+
+      > .chat-input {
+        min-height: 62px;
+        border-top: 1px solid #CCC;
+        padding: 16px;
+
+        > form {
+          display: flex;
+        }
       }
     }
   }
