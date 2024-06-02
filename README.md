@@ -100,11 +100,15 @@ The application is built using the following technologies:
    cd modern-chat
    ```
 
-3. Build the Docker images:
+3. Open 3 new terminal sessions and run each package:
 
    ```bash
-   pnpm dev:all
+   pnpm dev:server
+   pnpm dev:ws
+   pnpm dev:client
    ```
+
+   P.S: _Ensure you have MongoDB server running locally and adjust the DB config accordingly._
 
 4. Access the application:
 

@@ -7,7 +7,6 @@
   "scripts": {
     "dev:server": "pnpm --filter server dev",
     "dev:ws": "pnpm --filter ws dev",
-    "dev:client": "pnpm --filter client dev",
-    "dev:all": "pnpm dev:server & pnpm dev:ws & pnpm dev:client"
+    "dev:client": "pnpm --filter client dev"
   }
 }
