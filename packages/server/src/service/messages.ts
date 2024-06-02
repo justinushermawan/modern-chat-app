@@ -92,7 +92,7 @@ export class MessagesService {
       if (parentId) {
         parentMessage = await this.messages.findById(parentId);
         if (!parentMessage) {
-          throw new CustomError('Parent message not found', 1002);
+          throw new CustomError('Parent message not found', 1003);
         }
       }
 

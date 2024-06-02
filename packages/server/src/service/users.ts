@@ -3,6 +3,7 @@ import { Model } from 'mongoose';
 import { UsersDocument } from '../model';
 import { CreateUserDTO } from '../model/dto/createUserDTO';
 import { LoginDTO } from '../model/dto/loginDTO';
+import { ChangePasswordDTO } from '../model/dto/changePasswordDTO';
 import { CustomError } from '../model/vo/responseVo';
 import { signToken } from '../utils/jwt';
 
@@ -56,6 +57,36 @@ export class UsersService {
       const token = signToken({ id: user._id, email: user.email });
 
       return { id, name, email, token };
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  /**
+   * Change user password
+   * @param params
+   */
+  protected async changeUserPassword(params: ChangePasswordDTO): Promise<object> {
+    const { userId, currentPassword, newPassword } = params;
+    if (!userId) throw new CustomError('User ID must be provided', 1004);
+  
+    try {
+      const user = await this.users.findById(userId);
+      if (!user) {
+        throw new CustomError('User not found', 1005);
+      }
+
+      if (!(await user.comparePassword(currentPassword))) {
+        throw new CustomError('Invalid current password', 1006);
+      }
+
+      user.password = newPassword;
+      await user.save();
+      
+      const userObj = user.toObject();
+      delete userObj.password;
+      return userObj;
     } catch (err) {
       console.error(err);
       throw err;

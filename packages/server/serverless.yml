@@ -29,6 +29,13 @@ functions:
           path: /api/login
           method: POST
   
+  changePassword:
+    handler: src/handler.changePassword
+    events:
+      - httpApi:
+          path: /api/change-password
+          method: POST
+  
   getMessages:
     handler: src/handler.getMessages
     events:

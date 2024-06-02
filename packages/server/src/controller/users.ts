@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { UsersService } from '../service/users';
 import { CreateUserDTO } from '../model/dto/createUserDTO';
 import { LoginDTO } from '../model/dto/loginDTO';
+import { ChangePasswordDTO } from '../model/dto/changePasswordDTO';
 import { UsersDocument } from '../model';
 import { MessageUtil, StatusCode } from '../utils/message';
 
@@ -42,6 +43,27 @@ export class UsersController extends UsersService {
       const result = await this.verifyUser({
         email: params.email,
         password: params.password,
+      });
+
+      return MessageUtil.success(result);
+    } catch (err) {
+      console.error(err);
+      return MessageUtil.error(err.message, err.code, StatusCode.unauthorized);
+    }
+  }
+
+  /**
+   * Change user password
+   * @param {*} event
+   */
+  async changePassword(event: any, context?: Context) {
+    console.log('functionName', context.functionName);
+    const params: ChangePasswordDTO = JSON.parse(event.body);
+
+    try {
+      const result = await this.changeUserPassword({
+        userId: event.user.id,
+        ...params,
       });
 
       return MessageUtil.success(result);

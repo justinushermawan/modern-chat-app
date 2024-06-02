@@ -14,6 +14,10 @@ export const login: Handler = (event: any, context: Context) => {
   return usersController.login(event, context);
 };
 
+export const changePassword: Handler = verifyToken((event: any, context: Context) => {
+  return usersController.changePassword(event, context);
+});
+
 
 const messagesController = new MessagesController(users, messages);
 
