@@ -3,8 +3,9 @@ import { defineConfig } from 'umi';
 export default defineConfig({
   routes: [
     { path: "/", component: "Chat/Chat" },
-    { path: "/login", component: "Login/Login" },
     { path: "/register", component: "Register/Register" },
+    { path: "/login", component: "Login/Login" },
+    { path: "/change-password", component: "ChangePassword/ChangePassword" },
   ],
   npmClient: 'pnpm',
 });

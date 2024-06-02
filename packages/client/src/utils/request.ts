@@ -6,6 +6,7 @@ const url = 'http://localhost:3000/api';
 export const endpoints = {
   register: `${url}/register`,
   login: `${url}/login`,
+  changePassword: `${url}/change-password`,
 };
 
 const authorizationHeader = () => {
@@ -14,14 +15,12 @@ const authorizationHeader = () => {
     return undefined;
   }
 
-  let rawParsed = {};
+  let session = {};
   try {
-    rawParsed = JSON.parse(raw);
+    session = JSON.parse(raw);
   } catch (err) {
     //
   }
-
-  const { session } = rawParsed as Record<string, any>;
 
   const { token } = session as Record<string, any>;
 
@@ -48,7 +47,11 @@ request.interceptors.request.use(
 );
 
 request.interceptors.response.use((response) => {
-  if ((response.status === 403 || response.status === 401) && !response.url.endsWith(endpoints.login)) {
+  if (
+    (response.status === 403 || response.status === 401) &&
+    !response.url.endsWith(endpoints.login) &&
+    !response.url.endsWith(endpoints.changePassword)
+  ) {
     localStorage.clear();
     location.href = '/login';
   }

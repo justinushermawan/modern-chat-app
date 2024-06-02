@@ -25,7 +25,7 @@ export default function MenuContent({ participants, handleSelectChat }: Props) {
 
   const menu = (
     <Menu>
-      <Menu.Item key="menu-1" onClick={() => {}}>
+      <Menu.Item key="menu-1" onClick={() => history.push('/change-password')}>
         Change password
       </Menu.Item>
       <Menu.Item key="menu-2" onClick={handleLogout}>
