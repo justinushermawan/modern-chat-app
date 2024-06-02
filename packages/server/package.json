@@ -12,7 +12,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/aws-lambda": "^8.10.138",
     "@types/bcryptjs": "^2.4.6",
