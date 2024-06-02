@@ -1,7 +1,7 @@
 import request, { RequestOptionsInit } from 'umi-request';
 import { SESSION_STORAGE_KEY } from '@/hooks/useSession';
 
-const url = 'http://localhost:3000/api';
+const url = `${process.env.API_URL || 'http://localhost:3000'}/api`;
 
 export const endpoints = {
   register: `${url}/register`,
