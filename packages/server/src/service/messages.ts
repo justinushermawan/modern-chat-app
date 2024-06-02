@@ -1,4 +1,5 @@
 import { Model } from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
 
 import { UsersDocument, MessagesDocument } from '../model';
 import { SendMessageDTO } from '../model/dto/sendMessageDTO';
@@ -82,7 +83,7 @@ export class MessagesService {
    * @params params
    */
   protected async send(params: SendMessageDTO): Promise<object> {
-    const { parentId, user, content } = params;
+    const { parentId, user, content, files } = params;
   
     try {
       const userObj = await this.users.findById(user);
@@ -95,10 +96,19 @@ export class MessagesService {
         }
       }
 
+      let filesData = null;
+      if (files && files.length > 0) {
+        filesData = files.map((file) => {
+          const fileId = uuidv4();
+          return { fileId, fileName: file.fileName, data: file.data };
+        });
+      }
+
       const message = await this.messages.create({
         user: userObj,
         content,
         parent: parentMessage,
+        files: filesData,
       });
 
       if (parentMessage) {

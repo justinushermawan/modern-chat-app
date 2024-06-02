@@ -1,7 +1,7 @@
 import type { Message } from '@/types';
 
 import React from 'react';
-import { Button, Tooltip } from 'antd';
+import { Button, Tooltip, Typography } from 'antd';
 import { RollbackOutlined } from '@ant-design/icons';
 
 import useSession from '@/hooks/useSession';
@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function Message({ data, handleReplyClick }: Props) {
-  const { user, content, replies, parent, createdAt } = data;
+  const { user, content, replies, parent, files, createdAt } = data;
 
   const { session } = useSession();
 
@@ -27,12 +27,25 @@ export default function Message({ data, handleReplyClick }: Props) {
   return (
     <div className={`message ${messageType}`}>
       <div>
-        <div className={`message__content ${isReply ? 'reply' : undefined}`}>
+        <div className={`message__content${isReply ? ' reply' : ''}`}>
           <div className="message__content__sender">{isMe && isReply ? 'You' : user.name}</div>
           <div className="message__content__text">{content}</div>
           <p className="message__content__at">
             {new Date(createdAt).toLocaleString()}
           </p>
+          {files && (
+            <div className="message__content__files">
+              {files.map((file) => (
+                <Typography.Link
+                  key={file.fileId}
+                  href={`data:application/octet-stream;base64,${file.data}`}
+                  download={file.fileName}
+                >
+                  {file.fileName}
+                </Typography.Link>
+              ))}
+            </div>
+          )}
         </div>
         {replies.length > 0 && (
           <div

@@ -59,7 +59,16 @@ wss.on('connection', (ws: WebSocket) => {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response.status === 200) {
-          const { _id, user, content, replies, parent, createdAt, __v } = response.data.data;
+          const {
+            _id,
+            user,
+            content,
+            replies,
+            parent,
+            files,
+            createdAt,
+            __v,
+          } = response.data.data;
           broadcastNewMessage({
             _id,
             user: {
@@ -69,6 +78,7 @@ wss.on('connection', (ws: WebSocket) => {
             content,
             parent,
             replies,
+            files,
             createdAt,
             __v,
           }, restMessageData.parentId !== null);

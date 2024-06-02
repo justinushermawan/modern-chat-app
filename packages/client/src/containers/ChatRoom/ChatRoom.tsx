@@ -1,4 +1,4 @@
-import { Message } from '@/types';
+import { Message, SendMessageFile } from '@/types';
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Input, Upload, message as antdMessage } from 'antd';
@@ -10,11 +10,28 @@ import useSession from '@/hooks/useSession';
 
 import './ChatRoom.less';
 
+const extractFiles = async (fileList: UploadFile[]) => {
+  const files: { fileName: string, data: string }[] = await Promise.all(
+    fileList.map(async (file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const base64 = (e.target?.result as string).split(',')[1];
+          resolve({ fileName: file.name, data: base64 });
+        };
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(file.originFileObj!);
+      });
+    }),
+  );
+  return files;
+};
+
 interface Props {
   messages: Message[];
   loading: boolean;
 
-  handleSendMessage: (message: string, parentId: string | null) => void;
+  handleSendMessage: (message: string, parentId: string | null, files: SendMessageFile[] | null) => void;
   handleLoadMore: () => void;
 }
 
@@ -58,11 +75,14 @@ export default function ChatRoom({ messages, loading, handleSendMessage, handleL
     _handleSendMessage();
   };
 
-  const _handleSendMessage = () => {
-    handleSendMessage(messageText, replyingMessage ? replyingMessage._id : null);
+  const _handleSendMessage = async () => {
+    const parentId = replyingMessage ? replyingMessage._id : null;
+    const files = fileList.length > 0 ? await extractFiles(fileList) : null;
+    handleSendMessage(messageText, parentId, files);
   
     setMessageText('');
     setReplyingMessage(null);
+    setFileList([]);
 
     if (scrollerRef) {
       scrollerRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -153,7 +173,6 @@ export default function ChatRoom({ messages, loading, handleSendMessage, handleL
                 <Button
                   icon={<PaperClipOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
                   style={{ marginRight: '6px' }}
-                  onClick={handleCreateMessage}
                 />
               </Upload>
               <Input

@@ -20,6 +20,7 @@ export interface Message {
   };
   content: string;
   parent: string | null;
+  files: { fileName: string; data: string }[];
   replies: Message[];
   createdAt: string;
   __v: number;

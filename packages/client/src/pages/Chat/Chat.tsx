@@ -1,4 +1,4 @@
-import type { OnlineUser, Message } from '@/types';
+import type { OnlineUser, Message, SendMessageFile } from '@/types';
 
 import { useCallback, useEffect, useState } from 'react';
 import { useWebSocket } from 'ahooks';
@@ -96,7 +96,11 @@ export default function Chat() {
     setSelectedChat(id);
   };
 
-  const handleSendMessage = (message: string, parentId: string | null = null) => {
+  const handleSendMessage = (
+    message: string,
+    parentId: string | null = null,
+    files: SendMessageFile[] | null = null,
+  ) => {
     if (!session) return;
 
     if (message.trim()) {
@@ -105,6 +109,7 @@ export default function Chat() {
         user: session.id,
         content: message,
         parentId,
+        files,
       };
       sendMessage(JSON.stringify({ type: 'chatMessage', data }));
     }
