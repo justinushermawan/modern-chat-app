@@ -1,8 +1,9 @@
 import { Message } from '@/types';
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Button, Input } from 'antd';
-import { CloseOutlined } from '@ant-design/icons';
+import { Button, Input, Upload, message as antdMessage } from 'antd';
+import { UploadChangeParam, UploadFile } from 'antd/lib/upload/interface';
+import { CloseOutlined, DeleteOutlined, PaperClipOutlined, SendOutlined } from '@ant-design/icons';
 
 import ChatMessage from '@/components/ChatMessage/ChatMessage';
 import useSession from '@/hooks/useSession';
@@ -22,6 +23,7 @@ export default function ChatRoom({ messages, loading, handleSendMessage, handleL
 
   const [messageText, setMessageText] = useState('');
   const [replyingMessage, setReplyingMessage] = useState<Message | null>(null);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
 
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -71,6 +73,24 @@ export default function ChatRoom({ messages, loading, handleSendMessage, handleL
     event.preventDefault();
 
     setReplyingMessage(message);
+  };
+
+  const handleFileChange = ({ fileList }: UploadChangeParam) => {
+    if (fileList.length > 3) {
+      antdMessage.error('You can only upload up to 3 files.');
+      setFileList([]);
+      return;
+    }
+
+    const filteredFileList = fileList.filter((file) => {
+      const isImageOrText = file.type.startsWith('image/') || file.type === 'text/plain';
+      if (!isImageOrText) {
+        antdMessage.error('You can only upload image or text files.');
+      }
+      return isImageOrText;
+    });
+
+    setFileList(filteredFileList);
   };
 
   const handleOnScroll = useCallback(() => {
@@ -123,6 +143,19 @@ export default function ChatRoom({ messages, loading, handleSendMessage, handleL
           )}
           <div className="chat-input">
             <form onSubmit={(e) => e.preventDefault()}>
+              <Upload
+                multiple
+                fileList={fileList}
+                beforeUpload={() => false}
+                onChange={handleFileChange}
+                showUploadList={false}
+              >
+                <Button
+                  icon={<PaperClipOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
+                  style={{ marginRight: '6px' }}
+                  onClick={handleCreateMessage}
+                />
+              </Upload>
               <Input
                 type="text"
                 value={messageText}
@@ -130,9 +163,30 @@ export default function ChatRoom({ messages, loading, handleSendMessage, handleL
                 onChange={handleOnChangeMessage}
                 onKeyDown={handleOnKeyDownMessage}
               />
-              <Button onClick={handleCreateMessage}>Send message</Button>
+              <Button
+                shape="circle"
+                type="primary"
+                icon={<SendOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
+                style={{ marginLeft: '6px' }}
+                onClick={handleCreateMessage}
+              />
             </form>
           </div>
+          {fileList.length > 0 && (
+            <div className="chat-file-list">
+              {fileList.map((file) => (
+                <div key={file.uid} className="chat-file-list__item">
+                  <p>{file.name}</p>
+                  <Button
+                    type="dashed"
+                    shape="circle"
+                    icon={<DeleteOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
+                    onClick={() => setFileList(fileList.filter((f) => f.uid !== file.uid))}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
         </footer>
       </div>
     </div>

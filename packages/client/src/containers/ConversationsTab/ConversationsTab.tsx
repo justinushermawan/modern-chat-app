@@ -13,7 +13,6 @@ export default function ConversationsTab({ handleSelectChat }: Props) {
         <div className="conversations-list">
           <ConversationCard id="1" name="Public" onClick={() => handleSelectChat('1')} />
         </div>
-        <Button onClick={() => {}}>New conversation</Button>
       </div>
     </>
   );
